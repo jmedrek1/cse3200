@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">HW1 - Wiring Up Our Robots</string>
+    <string name="begin_msg">Begin The Game</string>
+    <string name="red_robot_msg">Red Robot\'s Turn</string>
+    <string name="yellow_robot_msg">Yellow Robot\'s Turn</string>
+    <string name="white_robot_msg">White Robot\'s Turn</string>
+</resources>
