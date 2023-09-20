@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 
 private const val TAG = "RobotViewModel"
 class RobotViewModel : ViewModel() {
+    var currentTurn = 0 // not in given code for hw2
     init {
         Log.d(TAG, "instance of RobotViewModel created.")
     }

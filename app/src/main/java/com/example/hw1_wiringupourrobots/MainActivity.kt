@@ -1,6 +1,7 @@
 package com.example.hw1_wiringupourrobots
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -73,5 +74,4 @@ class MainActivity : AppCompatActivity() {
             return
         messageBox.setText(robots[robotViewModel.currentTurn - 1].turnResourceId)
     }
-
 }
