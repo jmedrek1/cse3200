@@ -3,7 +3,6 @@ package com.example.hw1_wiringupourrobots
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.viewModels
 import android.os.Bundle
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.util.Log
@@ -16,7 +15,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var whiteBotImg: ImageView
     private lateinit var yellowBotImg: ImageView
     private lateinit var messageBox: TextView
-    var turnCount = 0
     private lateinit var robotImages : MutableList<ImageView>
 
     private val robots = listOf(
@@ -38,40 +36,42 @@ class MainActivity : AppCompatActivity() {
 
         robotImages = mutableListOf(redBotImg, whiteBotImg, yellowBotImg)
 
-        redBotImg.setOnClickListener { toggleImage() }
-        whiteBotImg.setOnClickListener { toggleImage() }
-        yellowBotImg.setOnClickListener { toggleImage() }
+        redBotImg.setOnClickListener {toggleImage()}
+        whiteBotImg.setOnClickListener {toggleImage()}
+        yellowBotImg.setOnClickListener {toggleImage()}
 
         Log.d(TAG, "Got a RobotViewModel : $robotViewModel")
+
+        robotViewModel.turnCount = 1
     }
 
     private fun toggleImage() {
-        turnCount++
-        if (turnCount > 3) {
-            turnCount = 1
+        robotViewModel.turnCount++
+        if (robotViewModel.turnCount > 3) {
+            robotViewModel.turnCount = 1
         }
         setRobotsTurn()
         setRobotsImages()
         updateMessageBox()
     }
     private fun setRobotsTurn() {
-        if (robotViewModel.currentTurn == 0)
+        if (robotViewModel.turnCount == 0)
             return
         for (robot in robots) { robot.myTurn = false }
-        robots[robotViewModel.currentTurn - 1].myTurn = true
+        robots[robotViewModel.turnCount - 1].myTurn = true
     }
     private fun setRobotsImages() {
         for (i in robots.indices) {
             if (robots[i].myTurn) {
-                robotImages[i].setImageResource(robots[i].largeImgRes)
+                robotImages[i].setImageResource(robots[i].largeResImgId)
             } else {
-                robotImages[i].setImageResource(robots[i].smallImgRes)
+                robotImages[i].setImageResource(robots[i].smallResImgId)
             }
         }
     }
     private fun updateMessageBox() {
-        if (robotViewModel.currentTurn == 0)
+        if (robotViewModel.turnCount == 0)
             return
-        messageBox.setText(robots[robotViewModel.currentTurn - 1].turnResourceId)
+        messageBox.setText(robots[robotViewModel.turnCount - 1].turnResourceId)
     }
 }
