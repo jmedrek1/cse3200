@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import android.util.Log
+import androidx.lifecycle.SavedStateViewModelFactory
 
 private const val TAG = "MainActivity"
 
@@ -18,12 +19,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var robotImages : MutableList<ImageView>
 
     private val robots = listOf(
-        Robot(R.string.red_turn, false, R.drawable.king_of_detroit_robot_red_large, R.drawable.king_of_detroit_robot_red_small),
-        Robot(R.string.white_turn, false, R.drawable.king_of_detroit_robot_white_large, R.drawable.king_of_detroit_robot_white_small),
-        Robot(R.string.yellow_turn, false, R.drawable.king_of_detroit_robot_yellow_large, R.drawable.king_of_detroit_robot_yellow_small)
+        Robot(R.string.red_turn, true, R.drawable.king_of_detroit_robot_red_large, R.drawable.king_of_detroit_robot_red_small),
+        Robot(R.string.white_turn, true, R.drawable.king_of_detroit_robot_white_large, R.drawable.king_of_detroit_robot_white_small),
+        Robot(R.string.yellow_turn, true, R.drawable.king_of_detroit_robot_yellow_large, R.drawable.king_of_detroit_robot_yellow_small)
     )
 
-    private val robotViewModel : RobotViewModel by viewModels()
+    private val robotViewModel : RobotViewModel by viewModels {
+        SavedStateViewModelFactory(application, this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,29 +39,28 @@ class MainActivity : AppCompatActivity() {
 
         robotImages = mutableListOf(redBotImg, whiteBotImg, yellowBotImg)
 
+        setRobotsTurn()
+        setRobotsImages()
+        updateMessageBox()
+
         redBotImg.setOnClickListener {toggleImage()}
         whiteBotImg.setOnClickListener {toggleImage()}
         yellowBotImg.setOnClickListener {toggleImage()}
 
         Log.d(TAG, "Got a RobotViewModel : $robotViewModel")
-
-        robotViewModel.turnCount = 1
     }
 
     private fun toggleImage() {
-        robotViewModel.turnCount++
-        if (robotViewModel.turnCount > 3) {
-            robotViewModel.turnCount = 1
-        }
+        robotViewModel.advanceTurn()
         setRobotsTurn()
         setRobotsImages()
         updateMessageBox()
     }
     private fun setRobotsTurn() {
-        if (robotViewModel.turnCount == 0)
+        if (robotViewModel.getTurnCount() == 0)
             return
         for (robot in robots) { robot.myTurn = false }
-        robots[robotViewModel.turnCount - 1].myTurn = true
+        robots[robotViewModel.getTurnCount() - 1].myTurn = true
     }
     private fun setRobotsImages() {
         for (i in robots.indices) {
@@ -70,8 +72,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun updateMessageBox() {
-        if (robotViewModel.turnCount == 0)
+        if (robotViewModel.getTurnCount() == 0)
             return
-        messageBox.setText(robots[robotViewModel.turnCount - 1].turnResourceId)
+        messageBox.setText(robots[robotViewModel.getTurnCount() - 1].turnResourceId)
     }
 }
