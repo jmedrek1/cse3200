@@ -21,12 +21,12 @@ class RobotViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
 //        if (turnCount > 3) {
 //            turnCount = 1
 //        }
-        val currentTurn = savedStateHandle.get<Int>(TURN_COUNT_KEY) ?: 0
-        val newTurn = (currentTurn % 3) + 1
+        val currentTurn = savedStateHandle.get<Int>(TURN_COUNT_KEY) ?: -1
+        val newTurn = (currentTurn + 1) % 3
         savedStateHandle[TURN_COUNT_KEY] = newTurn
     }
     fun getTurnCount(): Int {
-        return savedStateHandle.get<Int>(TURN_COUNT_KEY) ?: 0
+        return savedStateHandle.get<Int>(TURN_COUNT_KEY) ?: -1
     }
 //    from Prof's lecture
 //    private var turnCount: Int

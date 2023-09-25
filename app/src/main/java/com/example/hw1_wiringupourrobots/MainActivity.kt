@@ -57,10 +57,10 @@ class MainActivity : AppCompatActivity() {
         updateMessageBox()
     }
     private fun setRobotsTurn() {
-        if (robotViewModel.getTurnCount() == 0)
+        if (robotViewModel.getTurnCount() == -1)
             return
         for (robot in robots) { robot.myTurn = false }
-        robots[robotViewModel.getTurnCount() - 1].myTurn = true
+        robots[robotViewModel.getTurnCount()].myTurn = true
     }
     private fun setRobotsImages() {
         for (i in robots.indices) {
@@ -72,8 +72,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun updateMessageBox() {
-        if (robotViewModel.getTurnCount() == 0)
+        if (robotViewModel.getTurnCount() == -1)
             return
-        messageBox.setText(robots[robotViewModel.getTurnCount() - 1].turnResourceId)
+        messageBox.setText(robots[robotViewModel.getTurnCount()].turnResourceId)
     }
 }
