@@ -43,30 +43,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/begin_msg"
+        android:text="@string/begin_mssg"
         android:textSize="24sp"/>
 
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center_horizontal">-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/button_clockwise"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_marginRight="25dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:background="@drawable/circular_background"-->
+<!--            android:src="@drawable/rot_clockwise" />-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/button_counter"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_marginLeft="25dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:background="@drawable/circular_background"-->
+<!--            android:src="@drawable/rot_counter" />-->
+<!--    </LinearLayout>-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
-
-        <ImageButton
-            android:id="@+id/button_clockwise"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="25dp"
-            android:layout_gravity="center"
-            android:background="@drawable/circular_background"
-            android:src="@drawable/rot_clockwise" />
-
-        <ImageButton
-            android:id="@+id/button_counter"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="25dp"
-            android:layout_gravity="center"
-            android:background="@drawable/circular_background"
-            android:src="@drawable/rot_counter" />
+        android:gravity="center">
+        <Button
+            android:id="@+id/purchase_rewards_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Make Purchase"/>
     </LinearLayout>
+
 </LinearLayout>
