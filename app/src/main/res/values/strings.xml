@@ -12,4 +12,5 @@
     <string name="insufficient">Insufficient Resources</string>
     <string name="robot_energy">0</string>
     <string name="purchase_rewards">Make Purchase</string>
+    <string name="last_purchase_mssg">Last Purchase: %1s</string>
 </resources>

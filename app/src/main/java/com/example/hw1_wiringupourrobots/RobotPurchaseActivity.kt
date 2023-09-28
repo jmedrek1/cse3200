@@ -1,5 +1,6 @@
 package com.example.hw1_wiringupourrobots
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +18,6 @@ class RobotPurchaseActivity : AppCompatActivity() {
     private lateinit var reward_button_c : Button
     private lateinit var robot_energy_available : TextView
     private var robot_energy = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +41,8 @@ class RobotPurchaseActivity : AppCompatActivity() {
         reward_button_c.setOnClickListener{view : View ->
             makePurchase(3)
         }
+
+
     }
     companion object {
         fun newIntent(packageContext : Context, robot_energy : Int) : Intent { // package context is the activity starting this one
@@ -48,13 +50,15 @@ class RobotPurchaseActivity : AppCompatActivity() {
                 putExtra(EXTRA_ROBOT_ENERGY, robot_energy)
             }
         }
+
+        const val EXTRA_LAST_PURCHASE = "com.example.hw1_wiringupourrobots.LAST_PURCHASE"
     }
     private fun makePurchase(costOfPurchase : Int){
         if (robot_energy >= costOfPurchase){
             val s1 = when {
                 costOfPurchase == 1 -> getString(R.string.reward_a)
-                costOfPurchase == 2 -> getString(R.string.reward_a)
-                costOfPurchase == 3 -> getString(R.string.reward_a)
+                costOfPurchase == 2 -> getString(R.string.reward_b)
+                costOfPurchase == 3 -> getString(R.string.reward_c)
                 else -> getString(R.string.error_reward)
             }
             val s2 = getString(R.string.purchased)
@@ -62,6 +66,11 @@ class RobotPurchaseActivity : AppCompatActivity() {
             robot_energy -= costOfPurchase
             robot_energy_available.setText(robot_energy.toString())
             Toast.makeText(this, s3, Toast.LENGTH_SHORT).show()
+
+            // pass lastPurchase back to MainActivity
+            val intent = Intent()
+            intent.putExtra(EXTRA_LAST_PURCHASE, costOfPurchase)
+            setResult(Activity.RESULT_OK, intent)
         }else{
             Toast.makeText(this, R.string.insufficient, Toast.LENGTH_SHORT).show()
         }

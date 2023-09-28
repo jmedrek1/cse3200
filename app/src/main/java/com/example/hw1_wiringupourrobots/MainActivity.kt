@@ -1,5 +1,6 @@
 package com.example.hw1_wiringupourrobots
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.viewModels
@@ -10,6 +11,7 @@ import android.widget.TextView
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 
 //private const val EXTRA_ROBOT_ENERGY = "com.bignerdranch.android.robot.current_robot_energy"
 
@@ -55,10 +57,21 @@ class MainActivity : AppCompatActivity() {
 //            val intent = Intent(this, RobotPurchaseActivity::class.java)
 //            intent.putExtra(EXTRA_ROBOT_ENERGY, robots[turnCount - 1].myEnergy)
             val intent = RobotPurchaseActivity.newIntent(this, robots[turnCount - 1].myEnergy)
-            startActivity(intent)
+            startActivityForResult(intent, 123) // any unique code works here
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 123 && resultCode == Activity.RESULT_OK && data != null) {
+            val lastPurchase = data.getIntExtra(RobotPurchaseActivity.EXTRA_LAST_PURCHASE, 0)
+            // only show the toast if we've made a purchase before
+            if (lastPurchase > 0) {
+                robots[turnCount - 1].lastPurchase = lastPurchase
+            }
+        }
+    }
 
     private fun toggleImage() {
         turnCount++
@@ -76,7 +89,9 @@ class MainActivity : AppCompatActivity() {
     private fun setRobotsTurn(){
         for(robot in robots){robot.myTurn = false}
         robots[turnCount - 1].myTurn = true
-        robots[turnCount - 1].myEnergy++
+        robots[turnCount - 1].myEnergy += 1
+
+        showToastForLastPurchase(robots[turnCount - 1])
     }
 
     private fun setRobotImages(){
@@ -85,6 +100,22 @@ class MainActivity : AppCompatActivity() {
                 robotImages[indy].setImageResource(robots[indy].largeImgRes)
             }else{
                 robotImages[indy].setImageResource(robots[indy].smallImgRes)
+            }
+        }
+    }
+
+    private fun showToastForLastPurchase(robot: Robot) {
+        if (robot.myEnergy > 0) {
+            val lastPurchaseResource = when (robot.lastPurchase) {
+                1 -> getString(R.string.reward_a)
+                2 -> getString(R.string.reward_b)
+                3 -> getString(R.string.reward_c)
+                else -> getString(R.string.error_reward)
+            }
+            // only show the toast if a last purchase exists
+            if (lastPurchaseResource != getString(R.string.error_reward)) {
+                val lastPurchaseMessage = getString(R.string.last_purchase_mssg, lastPurchaseResource)
+                Toast.makeText(this, lastPurchaseMessage, Toast.LENGTH_SHORT).show()
             }
         }
     }
