@@ -65,11 +65,15 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 123 && resultCode == Activity.RESULT_OK && data != null) {
+            // purchase extra
             val lastPurchase = data.getIntExtra(RobotPurchaseActivity.EXTRA_LAST_PURCHASE, 0)
-            // only show the toast if we've made a purchase before
             if (lastPurchase > 0) {
-                robots[turnCount - 1].lastPurchase = lastPurchase
+                robots[turnCount - 1].lastPurchase = lastPurchase // only show if robot made a purchase before
             }
+
+            // energy extra
+            val updatedEnergy = data.getIntExtra(RobotPurchaseActivity.EXTRA_UPDATED_ENERGY, 0)
+            robots[turnCount - 1].myEnergy = updatedEnergy
         }
     }
 

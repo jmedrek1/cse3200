@@ -52,6 +52,7 @@ class RobotPurchaseActivity : AppCompatActivity() {
         }
 
         const val EXTRA_LAST_PURCHASE = "com.example.hw1_wiringupourrobots.LAST_PURCHASE"
+        const val EXTRA_UPDATED_ENERGY = "com.example.hw1_wiringupourrobots.UPDATED_ENERGY"
     }
     private fun makePurchase(costOfPurchase : Int){
         if (robot_energy >= costOfPurchase){
@@ -70,6 +71,7 @@ class RobotPurchaseActivity : AppCompatActivity() {
             // pass lastPurchase back to MainActivity
             val intent = Intent()
             intent.putExtra(EXTRA_LAST_PURCHASE, costOfPurchase)
+            intent.putExtra(EXTRA_UPDATED_ENERGY, robot_energy)
             setResult(Activity.RESULT_OK, intent)
         }else{
             Toast.makeText(this, R.string.insufficient, Toast.LENGTH_SHORT).show()
