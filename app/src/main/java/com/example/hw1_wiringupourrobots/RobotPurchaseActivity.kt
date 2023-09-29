@@ -68,7 +68,7 @@ class RobotPurchaseActivity : AppCompatActivity() {
             robot_energy_available.setText(robot_energy.toString())
             Toast.makeText(this, s3, Toast.LENGTH_SHORT).show()
 
-            // pass lastPurchase back to MainActivity
+            // pass lastPurchase and new energy back to MainActivity
             val intent = Intent()
             intent.putExtra(EXTRA_LAST_PURCHASE, costOfPurchase)
             intent.putExtra(EXTRA_UPDATED_ENERGY, robot_energy)
