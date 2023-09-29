@@ -1,5 +1,7 @@
 package com.example.hw1_wiringupourrobots
 
+import android.app.Activity
+import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.viewModels
@@ -10,6 +12,8 @@ import android.widget.TextView
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 
 //private const val EXTRA_ROBOT_ENERGY = "com.bignerdranch.android.robot.current_robot_energy"
 
@@ -22,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var reward_button : Button
 
     private lateinit var robotImages : MutableList<ImageView>
-
+    private var latestPurchaseCost = 0
     private var turnCount = 0
     private val robots = listOf(
         Robot(R.string.red_robot_mssg, false,
@@ -33,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             R.drawable.king_of_detroit_robot_yellow_large, R.drawable.king_of_detroit_robot_yellow_small, 0)
     )
 
-    private val robotViewModel : RobotViewModel by viewModels()
+//    private val robotViewModel : RobotViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +59,16 @@ class MainActivity : AppCompatActivity() {
 //            val intent = Intent(this, RobotPurchaseActivity::class.java)
 //            intent.putExtra(EXTRA_ROBOT_ENERGY, robots[turnCount - 1].myEnergy)
             val intent = RobotPurchaseActivity.newIntent(this, robots[turnCount - 1].myEnergy)
-            startActivity(intent)
+            //startActivity(intent)
+            purchaseLauncher.launch(intent)
         }
     }
 
+    private val purchaseLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            latestPurchaseCost = result.data?.getIntExtra(EXTRA_ROBOT_ITEM_PURCHASED, 0) ?: 0
+        }
+    }
 
     private fun toggleImage() {
         turnCount++

@@ -1,5 +1,6 @@
 package com.example.hw1_wiringupourrobots
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 private const val EXTRA_ROBOT_ENERGY = "com.bignerdranch.android.robot.current_robot_energy"
+const val EXTRA_ROBOT_ITEM_PURCHASED = "com.bignerdranch.android.robot.item_purchased"
 
 class RobotPurchaseActivity : AppCompatActivity() {
 
@@ -42,6 +44,14 @@ class RobotPurchaseActivity : AppCompatActivity() {
             makePurchase(3)
         }
     }
+
+    private fun setWhichItemPurchased(robotPurchaseMade : Int) {
+        val data = Intent().apply {
+            putExtra(EXTRA_ROBOT_ITEM_PURCHASED, robotPurchaseMade)
+        }
+        setResult(Activity.RESULT_OK, data)
+    }
+
     companion object {
         fun newIntent(packageContext : Context, robot_energy : Int) : Intent { // package context is the activity starting this one
             return Intent(packageContext, RobotPurchaseActivity::class.java).apply {
@@ -53,8 +63,8 @@ class RobotPurchaseActivity : AppCompatActivity() {
         if (robot_energy >= costOfPurchase){
             val s1 = when {
                 costOfPurchase == 1 -> getString(R.string.reward_a)
-                costOfPurchase == 2 -> getString(R.string.reward_a)
-                costOfPurchase == 3 -> getString(R.string.reward_a)
+                costOfPurchase == 2 -> getString(R.string.reward_b)
+                costOfPurchase == 3 -> getString(R.string.reward_c)
                 else -> getString(R.string.error_reward)
             }
             val s2 = getString(R.string.purchased)
