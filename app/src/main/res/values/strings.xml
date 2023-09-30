@@ -4,9 +4,15 @@
     <string name="red_robot_mssg">Red Robot\'s Turn</string>
     <string name="white_robot_mssg">White Robot\'s Turn</string>
     <string name="yellow_robot_mssg">Yellow Robot\'s Turn</string>
+
     <string name="reward_a">Reward A</string>
     <string name="reward_b">Reward B</string>
     <string name="reward_c">Reward C</string>
+    <string name="reward_d">Reward D</string>
+    <string name="reward_e">Reward E</string>
+    <string name="reward_f">Reward F</string>
+    <string name="reward_g">Reward G</string>
+
     <string name="error_reward">Unknown Item</string>
     <string name="purchased">Purchased</string>
     <string name="insufficient">Insufficient Resources</string>

@@ -49,7 +49,7 @@
             android:orientation="vertical"
             android:gravity="center">
             <Button
-                android:id="@+id/buy_reward_a"
+                android:id="@+id/buy_reward_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="100dp"
@@ -61,6 +61,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
                 <TextView
+                    android:id="@+id/reward_left_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1"
@@ -80,7 +81,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
             <Button
-                android:id="@+id/buy_reward_b"
+                android:id="@+id/buy_reward_middle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="100dp"
@@ -92,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
                 <TextView
+                    android:id="@+id/reward_middle_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2"
@@ -109,7 +111,7 @@
             android:orientation="vertical"
             android:gravity="center">
             <Button
-                android:id="@+id/buy_reward_c"
+                android:id="@+id/buy_reward_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="100dp"
@@ -121,6 +123,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
                 <TextView
+                    android:id="@+id/reward_right_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3"
@@ -133,6 +136,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>
