@@ -56,8 +56,15 @@ class MainActivity : AppCompatActivity() {
 //            Toast.makeText(this, "Going to make a purchase!", Toast.LENGTH_SHORT).show()
 //            val intent = Intent(this, RobotPurchaseActivity::class.java)
 //            intent.putExtra(EXTRA_ROBOT_ENERGY, robots[turnCount - 1].myEnergy)
-            val intent = RobotPurchaseActivity.newIntent(this, robots[turnCount - 1].myEnergy, robots[turnCount - 1].largeImgRes)
-            startActivityForResult(intent, 123) // any unique code works here
+            if (turnCount > 0) {
+                val intent = RobotPurchaseActivity.newIntent(
+                    this,
+                    robots[turnCount - 1].myEnergy,
+                    robots[turnCount - 1].largeImgRes,
+                    robots[turnCount - 1].purchases
+                )
+                startActivityForResult(intent, 123) // any unique code works here
+            }
         }
     }
 
@@ -66,9 +73,10 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == 123 && resultCode == Activity.RESULT_OK && data != null) {
             // purchase extra
-            val lastPurchase = data.getStringExtra(RobotPurchaseActivity.EXTRA_LAST_PURCHASE)
-            if (lastPurchase != null) {
-                robots[turnCount - 1].purchases.add(lastPurchase) // only show if robot made a purchase before
+            val purchases = data.getStringArrayListExtra(RobotPurchaseActivity.EXTRA_PURCHASES)
+            if (purchases != null) {
+                robots[turnCount - 1].purchases.clear() // removes duplicates
+                robots[turnCount - 1].purchases.addAll(purchases) // add back purchase history
             }
 
             // energy extra
@@ -120,10 +128,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun buildPurchasesToastMessage(purchases: List<String>): String {
-        val purchasedStringBuilder = StringBuilder()
-        for ((index, purchase) in purchases.withIndex()) {
-            purchasedStringBuilder.append("${index + 1}. ${purchase}\n")
-        }
-        return purchasedStringBuilder.toString().trim()
+        val purchasesNoPrefix = purchases.map { it.removePrefix("Reward ") }
+        val purchasedMessage = purchasesNoPrefix.joinToString(", ")
+        return "Purchased: " + purchasedMessage
     }
 }

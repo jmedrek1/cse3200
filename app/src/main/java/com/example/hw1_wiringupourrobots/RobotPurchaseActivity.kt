@@ -84,36 +84,45 @@ class RobotPurchaseActivity : AppCompatActivity() {
 
     }
     companion object {
-        fun newIntent(packageContext : Context, robot_energy : Int, robot_image_res : Int) : Intent { // package context is the activity starting this one
+        fun newIntent(packageContext : Context, robot_energy : Int, robot_image_res : Int, robot_purchases : List<String>) : Intent { // package context is the activity starting this one
             return Intent(packageContext, RobotPurchaseActivity::class.java).apply {
                 putExtra(EXTRA_ROBOT_ENERGY, robot_energy)
                 putExtra(EXTRA_ROBOT_IMAGE, robot_image_res)
+                putStringArrayListExtra(EXTRA_PURCHASES, ArrayList(robot_purchases))
             }
         }
 
-        const val EXTRA_LAST_PURCHASE = "com.example.hw1_wiringupourrobots.LAST_PURCHASE"
+        const val EXTRA_PURCHASES = "com.example.hw1_wiringupourrobots.PURCHASES"
         const val EXTRA_UPDATED_ENERGY = "com.example.hw1_wiringupourrobots.UPDATED_ENERGY"
         const val EXTRA_ROBOT_IMAGE = "com.example.hw1_wiringupourrobots.ROBOT_IMAGE"
     }
 
     private fun makePurchase(rewardPurchased : String, costOfPurchase : Int){
         if (robot_energy >= costOfPurchase){
+            val purchasesList = intent.getStringArrayListExtra(EXTRA_PURCHASES) ?: ArrayList()
             val s1 = when {
                 rewardPurchased != "" -> rewardPurchased
                 else -> getString(R.string.error_reward)
             }
-            val s2 = getString(R.string.purchased)
-            val s3 = s1 + " " + s2
-            robot_energy -= costOfPurchase
-            robot_energy_available.text = robot_energy.toString()
-            Toast.makeText(this, s3, Toast.LENGTH_SHORT).show()
+            if (!purchasesList.contains(s1)) {
+                val s2 = getString(R.string.purchased)
+                val s3 = s1 + " " + s2
 
-            // pass lastPurchase and new energy back to MainActivity
-            val intent = Intent()
-            intent.putExtra(EXTRA_LAST_PURCHASE, s1)
-            intent.putExtra(EXTRA_UPDATED_ENERGY, robot_energy)
-            setResult(Activity.RESULT_OK, intent)
-        }else {
+                robot_energy -= costOfPurchase
+                robot_energy_available.text = robot_energy.toString()
+                Toast.makeText(this, s3, Toast.LENGTH_SHORT).show()
+
+                // pass lastPurchase and new energy back to MainActivity
+                purchasesList.add(s1)
+
+                val intent = Intent()
+                intent.putStringArrayListExtra(EXTRA_PURCHASES, purchasesList)
+                intent.putExtra(EXTRA_UPDATED_ENERGY, robot_energy)
+                setResult(Activity.RESULT_OK, intent)
+            } else {
+                Toast.makeText(this, R.string.already_purchased, Toast.LENGTH_SHORT).show()
+            }
+        } else {
             Toast.makeText(this, R.string.insufficient, Toast.LENGTH_SHORT).show()
         }
     }
