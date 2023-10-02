@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 //            Toast.makeText(this, "Going to make a purchase!", Toast.LENGTH_SHORT).show()
 //            val intent = Intent(this, RobotPurchaseActivity::class.java)
 //            intent.putExtra(EXTRA_ROBOT_ENERGY, robots[turnCount - 1].myEnergy)
-            val intent = RobotPurchaseActivity.newIntent(this, robots[turnCount - 1].myEnergy)
+            val intent = RobotPurchaseActivity.newIntent(this, robots[turnCount - 1].myEnergy, robots[turnCount - 1].largeImgRes)
             startActivityForResult(intent, 123) // any unique code works here
         }
     }
@@ -66,9 +66,9 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == 123 && resultCode == Activity.RESULT_OK && data != null) {
             // purchase extra
-            val lastPurchase = data.getIntExtra(RobotPurchaseActivity.EXTRA_LAST_PURCHASE, 0)
-            if (lastPurchase > 0) {
-                robots[turnCount - 1].lastPurchase = lastPurchase // only show if robot made a purchase before
+            val lastPurchase = data.getStringExtra(RobotPurchaseActivity.EXTRA_LAST_PURCHASE)
+            if (lastPurchase != null) {
+                robots[turnCount - 1].purchases.add(lastPurchase) // only show if robot made a purchase before
             }
 
             // energy extra
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         robots[turnCount - 1].myTurn = true
         robots[turnCount - 1].myEnergy += 1
 
-        showToastForLastPurchase(robots[turnCount - 1])
+        showToastForPurchases(robots[turnCount - 1])
     }
 
     private fun setRobotImages(){
@@ -108,19 +108,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showToastForLastPurchase(robot: Robot) {
+    private fun showToastForPurchases(robot: Robot) {
         if (robot.myEnergy > 0) {
-            val lastPurchaseResource = when (robot.lastPurchase) {
-                1 -> getString(R.string.reward_a)
-                2 -> getString(R.string.reward_b)
-                3 -> getString(R.string.reward_c)
-                else -> getString(R.string.error_reward)
-            }
+            var purchasesResource = robot.purchases
             // only show the toast if a last purchase exists
-            if (lastPurchaseResource != getString(R.string.error_reward)) {
-                val lastPurchaseMessage = getString(R.string.last_purchase_mssg, lastPurchaseResource)
-                Toast.makeText(this, lastPurchaseMessage, Toast.LENGTH_SHORT).show()
+            if (purchasesResource.isNotEmpty()) {
+                val purchasesMessage = buildPurchasesToastMessage(purchasesResource)
+                Toast.makeText(this, purchasesMessage, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun buildPurchasesToastMessage(purchases: List<String>): String {
+        val purchasedStringBuilder = StringBuilder()
+        for ((index, purchase) in purchases.withIndex()) {
+            purchasedStringBuilder.append("${index + 1}. ${purchase}\n")
+        }
+        return purchasedStringBuilder.toString().trim()
     }
 }
