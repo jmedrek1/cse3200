@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 
 private const val EXTRA_CURRENT_ENERGY = "com.example.hw1_wiringupourrobots.CURRENT_ENERGY"
 
@@ -34,10 +35,12 @@ class RobotPurchaseActivity : AppCompatActivity() {
     private lateinit var reward_cost_right : TextView
 
     private lateinit var robot_image: ImageView
-    private var robot_image_res = R.drawable.king_of_detroit_robot_white_large
+//    private var robot_image_res = R.drawable.king_of_detroit_robot_white_large
 
     private lateinit var robot_energy_available : TextView
-    private var robot_energy = 0
+//    private var robot_energy = 0
+
+    private val robotViewModel : RobotViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,11 +69,11 @@ class RobotPurchaseActivity : AppCompatActivity() {
         reward_cost_middle.text = sortedRewards[1].value.toString()
         reward_cost_right.text = sortedRewards[2].value.toString()
 
-        robot_image_res = intent.getIntExtra(EXTRA_ROBOT_IMAGE, R.drawable.king_of_detroit_robot_white_large)
-        robot_image.setImageResource(robot_image_res)
+        robotViewModel.setRobotImageRes(intent.getIntExtra(EXTRA_ROBOT_IMAGE, R.drawable.king_of_detroit_robot_white_large))
+        robot_image.setImageResource(robotViewModel.getRobotImageRes())
 
-        robot_energy = intent.getIntExtra(EXTRA_CURRENT_ENERGY, 0)
-        robot_energy_available.text = robot_energy.toString()
+        robotViewModel.setRobotEnergy(intent.getIntExtra(EXTRA_CURRENT_ENERGY, 0))
+        robot_energy_available.text = robotViewModel.getRobotEnergy().toString()
 
         reward_button_left.setOnClickListener{view : View ->
             makePurchase(sortedRewards[0].key, sortedRewards[0].value)
@@ -98,7 +101,7 @@ class RobotPurchaseActivity : AppCompatActivity() {
     }
 
     private fun makePurchase(rewardPurchased : String, costOfPurchase : Int){
-        if (robot_energy >= costOfPurchase){
+        if (robotViewModel.getRobotEnergy() >= costOfPurchase){
             val purchasesList = intent.getStringArrayListExtra(EXTRA_PURCHASES) ?: ArrayList()
             val s1 = when {
                 rewardPurchased != "" -> rewardPurchased
@@ -108,8 +111,8 @@ class RobotPurchaseActivity : AppCompatActivity() {
                 val s2 = getString(R.string.purchased)
                 val s3 = s1 + " " + s2
 
-                robot_energy -= costOfPurchase
-                robot_energy_available.text = robot_energy.toString()
+                robotViewModel.setRobotEnergy(robotViewModel.getRobotEnergy() - costOfPurchase)
+                robot_energy_available.text = robotViewModel.getRobotEnergy().toString()
                 Toast.makeText(this, s3, Toast.LENGTH_SHORT).show()
 
                 // pass lastPurchase and new energy back to MainActivity
@@ -117,7 +120,7 @@ class RobotPurchaseActivity : AppCompatActivity() {
 
                 val intent = Intent()
                 intent.putStringArrayListExtra(EXTRA_PURCHASES, purchasesList)
-                intent.putExtra(EXTRA_UPDATED_ENERGY, robot_energy)
+                intent.putExtra(EXTRA_UPDATED_ENERGY, robotViewModel.getRobotEnergy())
                 setResult(Activity.RESULT_OK, intent)
             } else {
                 Toast.makeText(this, R.string.already_purchased, Toast.LENGTH_SHORT).show()
