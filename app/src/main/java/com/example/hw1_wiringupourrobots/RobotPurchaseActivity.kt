@@ -11,7 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 
-private const val EXTRA_ROBOT_ENERGY = "com.bignerdranch.android.robot.current_robot_energy"
+private const val EXTRA_CURRENT_ENERGY = "com.example.hw1_wiringupourrobots.CURRENT_ENERGY"
 
 private val allRewards = mapOf(
     R.string.reward_a to 1,
@@ -69,7 +69,7 @@ class RobotPurchaseActivity : AppCompatActivity() {
         robot_image_res = intent.getIntExtra(EXTRA_ROBOT_IMAGE, R.drawable.king_of_detroit_robot_white_large)
         robot_image.setImageResource(robot_image_res)
 
-        robot_energy = intent.getIntExtra(EXTRA_ROBOT_ENERGY, 0)
+        robot_energy = intent.getIntExtra(EXTRA_CURRENT_ENERGY, 0)
         robot_energy_available.text = robot_energy.toString()
 
         reward_button_left.setOnClickListener{view : View ->
@@ -86,7 +86,7 @@ class RobotPurchaseActivity : AppCompatActivity() {
     companion object {
         fun newIntent(packageContext : Context, robot_energy : Int, robot_image_res : Int, robot_purchases : List<String>) : Intent { // package context is the activity starting this one
             return Intent(packageContext, RobotPurchaseActivity::class.java).apply {
-                putExtra(EXTRA_ROBOT_ENERGY, robot_energy)
+                putExtra(EXTRA_CURRENT_ENERGY, robot_energy)
                 putExtra(EXTRA_ROBOT_IMAGE, robot_image_res)
                 putStringArrayListExtra(EXTRA_PURCHASES, ArrayList(robot_purchases))
             }

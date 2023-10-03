@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 
 //private const val EXTRA_ROBOT_ENERGY = "com.bignerdranch.android.robot.current_robot_energy"
 
@@ -53,9 +54,6 @@ class MainActivity : AppCompatActivity() {
         whiteBotImage.setOnClickListener { toggleImage() }
         yellowBotImage.setOnClickListener { toggleImage() }
         reward_button.setOnClickListener {view : View ->
-//            Toast.makeText(this, "Going to make a purchase!", Toast.LENGTH_SHORT).show()
-//            val intent = Intent(this, RobotPurchaseActivity::class.java)
-//            intent.putExtra(EXTRA_ROBOT_ENERGY, robots[turnCount - 1].myEnergy)
             if (turnCount > 0) {
                 val intent = RobotPurchaseActivity.newIntent(
                     this,
@@ -63,25 +61,23 @@ class MainActivity : AppCompatActivity() {
                     robots[turnCount - 1].largeImgRes,
                     robots[turnCount - 1].purchases
                 )
-                startActivityForResult(intent, 123) // any unique code works here
+                purchaseLauncher.launch(intent)
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 123 && resultCode == Activity.RESULT_OK && data != null) {
-            // purchase extra
-            val purchases = data.getStringArrayListExtra(RobotPurchaseActivity.EXTRA_PURCHASES)
+    private val purchaseLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val purchases = result.data?.getStringArrayListExtra(RobotPurchaseActivity.EXTRA_PURCHASES)
             if (purchases != null) {
                 robots[turnCount - 1].purchases.clear() // removes duplicates
                 robots[turnCount - 1].purchases.addAll(purchases) // add back purchase history
             }
 
-            // energy extra
-            val updatedEnergy = data.getIntExtra(RobotPurchaseActivity.EXTRA_UPDATED_ENERGY, 0)
-            robots[turnCount - 1].myEnergy = updatedEnergy
+            val updatedEnergy = result.data?.getIntExtra(RobotPurchaseActivity.EXTRA_UPDATED_ENERGY, 0)
+            if (updatedEnergy != null) {
+                robots[turnCount - 1].myEnergy = updatedEnergy
+            }
         }
     }
 
